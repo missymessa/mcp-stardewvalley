@@ -33,14 +33,19 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore
+        run: |
+          dotnet restore src/McpServer.Core/McpServer.Core.csproj
+          dotnet restore src/McpServer.Api/McpServer.Api.csproj
+          dotnet restore test/McpServer.Core.Tests/McpServer.Core.Tests.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: |
+          dotnet build src/McpServer.Core/McpServer.Core.csproj --configuration Release --no-restore
+          dotnet build src/McpServer.Api/McpServer.Api.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: |
-          dotnet test --no-build --verbosity normal
+          dotnet test test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --no-build --logger "trx;LogFileName=test_results.trx" --verbosity normal
 
       - name: Upload test results
         if: always()
