@@ -18,22 +18,24 @@ Project setup (P0)
 - [x] Add `docs/PRD_MCP_StardewValley.md` to repo and link to checklist (owner: PM) — done
 
 Embeddings & vector store (P0)
-- [ ] Choose vector DB backend for MVP (FAISS local) (owner: lead ML) — 1 day
-- [ ] Choose embedding provider and implement adapter (local open model or cloud provider) (owner: lead ML) — 1–2 days
+- [x] Choose vector DB backend for MVP (in-memory for prototyping; FAISS later) (owner: lead ML) — decided (in-memory)
+- [x] Choose embedding provider and implement adapter (DeterministicEmbeddingsProvider implemented) (owner: lead ML) — done
 - [ ] Add `mcp-config.yml` with embedding + vector DB config (owner: dev) — 0.5 day
-- [ ] Implement local dev instance of vector DB and verify storing/retrieving vectors (owner: dev) — 1–2 days
+- [x] Implement local dev instance of vector DB and verify storing/retrieving vectors (InMemoryVectorStore implemented) (owner: dev) — done
 
 MediaWiki ingestion (MVP, P0)
-- [ ] Implement MediaWiki connector using Fandom/MediaWiki API respecting rate limits (owner: dev) — 2–3 days
-- [ ] Implement normalizer: HTML->text, extract tables, preserve code blocks (owner: dev) — 2 days
-- [ ] Implement chunking (500–1,000 token chunks, overlap) and metadata attachment (owner: dev) — 1 day
-- [ ] Generate embeddings and store chunks in vector DB; include metadata (owner: dev) — 1 day
-- [ ] CLI: `mcp ingest wiki --page "Parsnip"` (owner: dev) — 0.5 day
+- [x] Implement MediaWiki connector using Fandom/MediaWiki API respecting rate limits (owner: dev) — implemented (`MediaWikiIngestor`)
+- [x] Implement normalizer: HTML->text, extract tables, preserve code blocks (owner: dev) — partial: used MediaWiki `extracts` plaintext for MVP
+- [x] Implement chunking (500–1,000 token chunks, overlap) and metadata attachment (owner: dev) — `SimpleChunker` implemented
+- [x] Generate embeddings and store chunks in vector DB; include metadata (owner: dev) — implemented (`/v1/ingest/wiki/store` endpoint)
+- [ ] CLI: `mcp ingest wiki --page "Parsnip"` (owner: dev) — 0.5 day (not implemented)
 - Acceptance criterion: top-5 retrieval accuracy >= 80% on a small local benchmark of 50 queries
 
 API & MCP endpoints (MVP, P0)
-- [ ] Implement POST `/v1/context/query` (query, top_k, filters) (owner: backend) — 2 days
-- [ ] Implement POST `/v1/ingest/wiki` and GET `/v1/docs/wiki` (owner: backend) — 1–2 days
+- [x] Implement POST `/v1/context/query` (query, top_k, filters) (owner: backend) — implemented (basic exact-match fallback)
+- [x] Implement semantic search POST `/v1/context/search` using embeddings + vector store (owner: backend) — implemented
+- [x] Implement POST `/v1/ingest/wiki` (basic fetch), `/v1/ingest/wiki/preview`, and `/v1/ingest/wiki/store` (store embeddings & metadata) (owner: backend) — implemented
+- [ ] Implement GET `/v1/docs/wiki` (owner: backend) — 1–2 days (not implemented)
 - [ ] Add basic metadata filtering support (source_type, game_version, mod_name) (owner: backend) — 1 day
 - [ ] Add API key auth + TLS enforcement (P1) (owner: infra) — 2 days
 - Acceptance criterion: API returns relevant chunks and respects filters; measured latency < 300ms for cached queries
@@ -54,10 +56,11 @@ Developer tooling & CLI (P0)
 - [ ] CLI commands for wiki/mod/game ingestion plus status and reindex operations (owner: dev) — 2 days
 - [ ] Add config-based toggles for local-only mode, rate-limits, and vector DB options (owner: dev) — 1 day
 - [x] Add unit tests and test project (NUnit) — done: `test/McpServer.Core.Tests` (owner: dev)
-- [x] Add AwesomeAssertions package reference for expressive assertions (owner: dev) — done (package referenced in test project)
+- [x] Added unit tests for processing & embeddings (owner: dev) — done
 
 Testing & benchmark (P0/P1)
-- [x] Add unit tests for InMemoryContextService and run locally (owner: dev) — done (2 tests passed)
+- [x] Add unit tests for InMemoryContextService and run locally (owner: dev) — done
+- [x] Add unit tests for processing & embeddings (owner: dev) — done (6 tests)
 - [ ] Create automated benchmark suite (200-query set) from PRD examples and wiki pages (owner: QA) — 2 days
 - [ ] Implement integration tests for connectors and MCP endpoints (owner: QA/dev) — 2–3 days
 - [ ] Performance tests for latency and caching (owner: QA) — 1–2 days
@@ -85,15 +88,17 @@ Milestones (mapping to PRD)
 
 Quick first-week plan (concrete)
 - Day 1: Repo skeleton, choose vector DB & embedding provider, implement config file — started (language chosen: .NET; src scaffold created)
-- Day 2–3: Implement MediaWiki connector + normalizer; implement chunking and local storage of chunks — next
-- Day 4: Integrate embeddings and vector DB; basic `context/query` that returns nearest chunks — partial done (basic API endpoint + in-memory context store exists)
+- Day 2–3: Implement MediaWiki connector + normalizer; implement chunking and local storage of chunks — done
+- Day 4: Integrate embeddings and vector DB; basic `context/query` that returns nearest chunks — done (end-to-end ingest→chunk→embed→store implemented)
 - Day 5: Run 50-query retrieval benchmark and iterate on chunking/normalization — next
 
 New immediate action items (today)
-- [ ] Implement MediaWiki connector skeleton (owner: dev) — create an interface and a basic connector that can fetch page content via MediaWiki API
-- [ ] Implement chunking & normalization utility (owner: dev) — build helper that splits text into 500–1000 token chunks with overlap
-- [ ] Wire basic ingestion path: ingest wiki page → chunk → embed → store in InMemory/FAISS (owner: dev)
-- [ ] Add CI job for running test suite on push (owner: infra)
+- [x] Implement MediaWiki connector skeleton (owner: dev) — done
+- [x] Implement chunking & normalization utility (owner: dev) — done
+- [x] Wire basic ingestion path: ingest wiki page → chunk → embed → store in InMemory/FAISS (owner: dev) — done (InMemory)
+- [ ] Add CLI command and examples for `mcp ingest wiki` (owner: dev)
+- [ ] Add integration test for ingest→store→search (owner: QA/dev)
+- [ ] Add `mcp-config.yml` and document embedding + vector DB configuration (owner: dev)
 
 Notes & acceptance criteria summary
 - P0 acceptance: End-to-end ingestion + retrieval for wiki with top-5 retrieval ≥ 80% on small benchmark; `/v1/context/query` responds and returns metadata-backed chunks; manifests ingestable and searchable.

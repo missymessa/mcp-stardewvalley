@@ -7,6 +7,7 @@ using McpServer.VectorStore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,20 @@ builder.Services.AddHttpClient<IMediaWikiIngestor, MediaWikiIngestor>(client =>
 
 // Processing & embeddings
 builder.Services.AddSingleton<IChunker, SimpleChunker>();
-builder.Services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
+
+var openAiKey = builder.Configuration["OPENAI_API_KEY"] ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+if (!string.IsNullOrWhiteSpace(openAiKey))
+{
+    builder.Services.AddHttpClient<IEmbeddingsProvider, OpenAIEmbeddingsProvider>(client =>
+    {
+        client.BaseAddress = new Uri("https://api.openai.com/");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAiKey);
+    });
+}
+else
+{
+    builder.Services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
+}
 
 // Vector store
 builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
