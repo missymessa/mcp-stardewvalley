@@ -46,7 +46,7 @@ jobs:
 
       - name: Run tests
         run: |
-          dotnet test test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --no-build --logger "trx;LogFileName=test_results.trx" --verbosity normal
+          dotnet test test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --verbosity normal
 
       - name: Upload test results
         if: always()
