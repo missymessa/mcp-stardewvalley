@@ -15,6 +15,9 @@
     <ProjectReference Include="..\McpServer.Embeddings\McpServer.Embeddings.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\McpServer.VectorStore\McpServer.VectorStore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 </Project>
