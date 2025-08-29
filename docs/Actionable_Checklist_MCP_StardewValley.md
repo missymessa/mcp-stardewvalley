@@ -61,8 +61,8 @@ Developer tooling & CLI (P0)
 Testing & benchmark (P0/P1)
 - [x] Add unit tests for InMemoryContextService and run locally (owner: dev) — done
 - [x] Add unit tests for processing & embeddings (owner: dev) — done (6 tests)
-- [ ] Create automated benchmark suite (200-query set) from PRD examples and wiki pages (owner: QA) — 2 days
-- [ ] Implement integration tests for connectors and MCP endpoints (owner: QA/dev) — 2–3 days
+- [x] Create automated benchmark suite (200-query set) from PRD examples and wiki pages (owner: QA) — scaffolded: `tools/McpServer.Benchmark` (sample seed + queries)
+- [x] Implement integration tests for connectors and MCP endpoints (owner: QA/dev) — done (`test/McpServer.Core.Tests/Integration/IngestStoreSearchTests.cs`)
 - [ ] Performance tests for latency and caching (owner: QA) — 1–2 days
 
 Security, licensing & privacy (P1)
@@ -96,8 +96,9 @@ New immediate action items (today)
 - [x] Implement MediaWiki connector skeleton (owner: dev) — done
 - [x] Implement chunking & normalization utility (owner: dev) — done
 - [x] Wire basic ingestion path: ingest wiki page → chunk → embed → store in InMemory/FAISS (owner: dev) — done (InMemory)
+- [x] Add integration test for ingest→store→search (owner: QA/dev) — done
+- [x] Add `tools/McpServer.Benchmark` scaffold for retrieval benchmarking (owner: dev) — done (sample data included)
 - [ ] Add CLI command and examples for `mcp ingest wiki` (owner: dev)
-- [ ] Add integration test for ingest→store→search (owner: QA/dev)
 - [ ] Add `mcp-config.yml` and document embedding + vector DB configuration (owner: dev)
 
 Notes & acceptance criteria summary

@@ -10,6 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <ProjectReference Include="..\\McpServer.Processing\\McpServer.Processing.csproj" />
+    <ProjectReference Include="..\\McpServer.Embeddings\\McpServer.Embeddings.csproj" />
+    <ProjectReference Include="..\\McpServer.VectorStore\\McpServer.VectorStore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
   </ItemGroup>
 </Project>

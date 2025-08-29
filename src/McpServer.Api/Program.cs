@@ -27,6 +27,14 @@ builder.Services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbedd
 
 // Vector store
 builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+
+// register SMAPI ingestor (typed HttpClient)
+builder.Services.AddHttpClient<SmapiIngestor>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(60);
+    try { client.DefaultRequestHeaders.UserAgent.ParseAdd("mcp-smapi-ingestor"); } catch { }
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMcpServer().WithHttpTransport().WithToolsFromAssembly();
@@ -176,6 +184,13 @@ app.MapPost("/v1/context/search", async (QueryRequest request, IEmbeddingsProvid
     });
 
     return Results.Ok(new { query = q, results = response });
+});
+
+app.MapPost("/v1/ingest/smapi", async (SmapiIngestRequest request, SmapiIngestor ingestor) =>
+{
+    if (string.IsNullOrWhiteSpace(request.Repo)) return Results.BadRequest(new { error = "repo is required (owner/repo)" });
+    var stored = await ingestor.IngestFromGitHubAsync(request.Repo, request.Branch, request.PathFilter);
+    return Results.Ok(new { stored });
 });
 
 app.MapMcp();

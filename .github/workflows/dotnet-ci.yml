@@ -44,9 +44,31 @@ jobs:
           dotnet build src/McpServer.Api/McpServer.Api.csproj --configuration Release --no-restore
           dotnet build test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --configuration Release --no-restore
 
-      - name: Run tests
+      - name: Run tests (non-Windows)
+        if: runner.os != 'Windows'
         run: |
-          dotnet test test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --verbosity normal
+          tests_failed=0
+          for proj in $(find test -name '*.csproj'); do
+            echo "Running tests in $proj"
+            dotnet test "$proj" --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --verbosity normal || tests_failed=1
+          done
+          if [ $tests_failed -ne 0 ]; then
+            echo "One or more test projects failed"
+            exit 1
+          fi
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $projects = Get-ChildItem -Path test -Recurse -Filter *.csproj | Select-Object -ExpandProperty FullName
+          $exitCode = 0
+          foreach ($proj in $projects) {
+            Write-Host "Running tests in $proj"
+            dotnet test $proj --no-build --configuration Release --logger "trx;LogFileName=test_results.trx" --verbosity normal
+            if ($LASTEXITCODE -ne 0) { $exitCode = $LASTEXITCODE }
+          }
+          exit $exitCode
 
       - name: Upload test results
         if: always()

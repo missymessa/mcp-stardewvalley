@@ -12,6 +12,7 @@ using McpServer.Embeddings;
 
 namespace McpServer.Core.Tests.Integration
 {
+    [Category("Integration")]
     [TestFixture]
     public class IngestStoreSearchTests
     {
