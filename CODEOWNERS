@@ -1,0 +1,6 @@
+# Default code owners - update with your org/team/usernames
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+/docs/ @your-github-username
+/src/ @your-github-username
+/test/ @your-github-username

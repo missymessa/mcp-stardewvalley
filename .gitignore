@@ -1,0 +1,55 @@
+# .gitignore for .NET projects
+
+# Build outputs
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Test results
+TestResults/
+
+# NuGet
+.nuget/
+packages/
+
+# Local environment / secrets
+.env
+.env.*
+secrets.json
+credentials.json
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Game assets and local conversion artifacts — DO NOT COMMIT
+GameFiles/
+xnb/
+*.xnb
+XnbToJsonOutput/
+
+# Generated code
+**/*.generated.cs
+
+# Publish folder
+publish/
+
+# Coverage
+coverage/
+
+# Misc
+*.pfx

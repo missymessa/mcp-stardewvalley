@@ -1,0 +1,12 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Treat markdown as text with LF line endings
+*.md text eol=lf
+
+# C# source
+*.cs diff=csharp
+
+# Solution files: normalize
+*.sln text
+
