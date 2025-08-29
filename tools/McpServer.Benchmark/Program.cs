@@ -31,19 +31,8 @@ namespace McpServer.Benchmark
 
             services.AddSingleton<IChunker, SimpleChunker>();
 
-            var openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-            if (!string.IsNullOrWhiteSpace(openAiKey))
-            {
-                services.AddHttpClient<IEmbeddingsProvider, OpenAIEmbeddingsProvider>(client =>
-                {
-                    client.BaseAddress = new Uri("https://api.openai.com/");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", openAiKey);
-                });
-            }
-            else
-            {
-                services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
-            }
+            // Use deterministic embeddings for local benchmark by default
+            services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
 
             services.AddSingleton<IVectorStore, InMemoryVectorStore>();
 

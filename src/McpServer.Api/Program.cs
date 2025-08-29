@@ -22,24 +22,14 @@ builder.Services.AddHttpClient<IMediaWikiIngestor, MediaWikiIngestor>(client =>
 // Processing & embeddings
 builder.Services.AddSingleton<IChunker, SimpleChunker>();
 
-var openAiKey = builder.Configuration["OPENAI_API_KEY"] ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-if (!string.IsNullOrWhiteSpace(openAiKey))
-{
-    builder.Services.AddHttpClient<IEmbeddingsProvider, OpenAIEmbeddingsProvider>(client =>
-    {
-        client.BaseAddress = new Uri("https://api.openai.com/");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAiKey);
-    });
-}
-else
-{
-    builder.Services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
-}
+// Register a deterministic local embeddings provider by default
+builder.Services.AddSingleton<IEmbeddingsProvider>(sp => new DeterministicEmbeddingsProvider(128));
 
 // Vector store
 builder.Services.AddSingleton<IVectorStore, InMemoryVectorStore>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMcpServer().WithHttpTransport().WithToolsFromAssembly();
 
 var app = builder.Build();
 
@@ -187,6 +177,8 @@ app.MapPost("/v1/context/search", async (QueryRequest request, IEmbeddingsProvid
 
     return Results.Ok(new { query = q, results = response });
 });
+
+app.MapMcp();
 
 // Seed initial sample content for local development
 var contextSvc = app.Services.GetRequiredService<IContextService>();
