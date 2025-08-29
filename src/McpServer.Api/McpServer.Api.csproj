@@ -11,6 +11,10 @@
     <ProjectReference Include="..\McpServer.Ingest\McpServer.Ingest.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\McpServer.Processing\McpServer.Processing.csproj" />
+    <ProjectReference Include="..\McpServer.Embeddings\McpServer.Embeddings.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 </Project>
