@@ -13,5 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\\..\\src\\McpServer.Core\\McpServer.Core.csproj" />
+    <ProjectReference Include="..\\..\\src\\McpServer.Processing\\McpServer.Processing.csproj" />
+    <ProjectReference Include="..\\..\\src\\McpServer.Embeddings\\McpServer.Embeddings.csproj" />
   </ItemGroup>
 </Project>
