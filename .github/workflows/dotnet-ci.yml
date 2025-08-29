@@ -42,6 +42,7 @@ jobs:
         run: |
           dotnet build src/McpServer.Core/McpServer.Core.csproj --configuration Release --no-restore
           dotnet build src/McpServer.Api/McpServer.Api.csproj --configuration Release --no-restore
+          dotnet build test/McpServer.Core.Tests/McpServer.Core.Tests.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: |
