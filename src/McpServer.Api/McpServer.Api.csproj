@@ -18,7 +18,7 @@
     <ProjectReference Include="..\McpServer.VectorStore\McpServer.VectorStore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.3.0-preview.4" />
