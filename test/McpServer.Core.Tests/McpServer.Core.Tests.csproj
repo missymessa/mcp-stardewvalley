@@ -9,7 +9,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="AwesomeAssertions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.20" />
   </ItemGroup>
 
   <ItemGroup>
